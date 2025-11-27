@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoMarket - Pago y Dirección</title>
+
+    <style>
+ 
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #e9f9eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 6px solid #bfe6c1;
+            border-top: 6px solid #3b7d40;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 20px;
+            background: #f5fff7;
+            color: #050706;
+            transition: 0.3s;
+        }
+
+        body.dark { background: #0f1a12; color: #e6ffe8; }
+        body.dark input, body.dark select { background: #14251a; color: white; }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #3b7d40;
+            color: white;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .dark-mode-toggle:hover { background: #204d22; }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: inherit;
+            padding: 10px;
+            backdrop-filter: blur(6px);
+            z-index: 100;
+        }
+
+        .header-container h2 {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 0;
+        }
+
+        .header-container h2 img {
+            height: 50px;
+            width: auto;
+        }
+
+        .nav-menu { display: flex; gap: 20px; }
+        .nav-menu a {
+            text-decoration: none;
+            color: #204d22;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 4px;
+            transition: 0.3s;
+        }
+
+        body.dark .nav-menu a { color: #b6ffbb; }
+        .nav-menu a::after {
+            content: "";
+            position: absolute;
+            left: 0; bottom: 0;
+            width: 0%; height: 3px;
+            background: #3b7d40;
+            transition: width 0.3s ease;
+        }
+        .nav-menu a:hover::after { width: 100%; }
+
+       
+        .form-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #204d22;
+            margin-top: 30px;
+            transition: 0.3s;
+        }
+
+        body.dark .form-container { background: #122219; }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            border-radius: 6px;
+            border: 1px solid #204d22;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 5px #3b7d40;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #3b7d40;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover { background: #204d22; transform: scale(1.03); }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="header-container">
+        <h2>
+            <img src="imagenes/LOGO.png" alt="Logo EcoMarket">
+            Datos de Envío y Pago
+        </h2>
+
+        <nav class="nav-menu">
+            <a href="index.html">Inicio</a>
+            <a href="productos.html">Productos</a>
+            <a href="compra.html">Compra</a>
+        </nav>
+
+        <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+            🌙 Modo oscuro
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Datos de Envío y Pago</h2>
+
+        <label>Nombre completo:</label>
+        <input type="text" id="nombre">
+
+        <label>Dirección:</label>
+        <input type="text" id="direccion">
+
+        <label>Método de pago:</label>
+        <select id="pago" onchange="mostrarInfoPago()">
+            <option value="efectivo">Efectivo</option>
+            <option value="tarjeta">Tarjeta</option>
+            <option value="transferencia">Transferencia</option>
+            <option value="yape">Yape</option>
+            <option value="plin">Plin</option>
+        </select>
+
+        <div id="info-pago" style="margin-bottom:15px; font-size:14px; color:#204d22;"></div>
+
+        <button onclick="finalizarCompra()">Finalizar Compra</button>
+    </div>
+
+    <script>
+
+        window.onload = function () {
+            setTimeout(() => {
+                document.getElementById("loader").style.display = "none";
+            }, 700);
+        };
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark");
+        }
+
+        function mostrarInfoPago() {
+            const metodo = document.getElementById("pago").value;
+            const info = document.getElementById("info-pago");
+
+            if (metodo === "yape") {
+                info.innerHTML = "Paga con Yape al número: <strong>999-999-999</strong>";
+            } else if (metodo === "plin") {
+                info.innerHTML = "Paga con Plin al número: <strong>888-888-888</strong>";
+            } else {
+                info.innerHTML = "";
+            }
+        }
+
+        function finalizarCompra() {
+            const nombre = document.getElementById("nombre").value;
+            const direccion = document.getElementById("direccion").value;
+            const pago = document.getElementById("pago").value;
+
+            if (!nombre || !direccion) {
+                alert("Complete todos los campos.");
+                return;
+            }
+
+            let mensaje = `Gracias ${nombre}! Tu pedido será enviado a: ${direccion}\nPago: ${pago}`;
+
+            if (pago === "yape") mensaje += "\nRecuerda pagar al número indicado para Yape.";
+            if (pago === "plin") mensaje += "\nRecuerda pagar al número indicado para Plin.";
+
+            alert(mensaje);
+            window.location.href = "inicio.html";
+        }
+    </script>
+
+</body>
+</html>

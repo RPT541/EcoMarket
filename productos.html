@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoMarket - Productos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #33d872;
+            color: #1f3924;
+        }
+
+        header {
+            background: #6fe5ee;
+            padding: 20px 40px;
+            border-bottom: 2px solid #592892;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #204d22;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header h1 img {
+            height: 90px;
+            width: auto;
+        }
+
+        nav a {
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 600;
+            color: #204d22;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #3b7d40;
+            text-shadow: 0 0 5px #3b7d40;
+            transform: scale(1.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 32px;
+        }
+
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            padding: 40px;
+        }
+
+        .producto {
+            background: #ffffffd3;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .producto:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .producto img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .producto h3 {
+            margin: 15px 0 5px;
+        }
+
+        .producto p {
+            font-size: 14px;
+            color: #345f39;
+        }
+
+        .producto button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #3b7d40;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .producto button:hover {
+            background-color: #204d22;
+        }
+
+        .mensaje-carrito {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #3b7d40;
+            padding: 5px 10px;
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(10px);
+        }
+
+        .mensaje-carrito.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        select,
+        input {
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid #126e38;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        label {
+            font-weight: 500;
+        }
+
+        .por-que {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #e9f9ec, #d0f0d9);
+            margin: 40px 20px 20px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            background-image: url(imagenes/futuro.webp);
+            background-size: cover;
+            background-position: center;
+            color: #204d22;
+            text-align: center;
+        }
+
+        .por-que h2 {
+            color: #f57b77;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .por-que p {
+            color: #0a0a0a;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+            max-width: 900px;
+            margin: auto;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .comentario {
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .comentario:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        #carrito-flotante {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #3b7d40;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 1000;
+        }
+
+        #panel-carrito {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+            padding: 15px;
+            z-index: 1000;
+        }
+
+        #panel-carrito h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        #lista-carrito .item-carrito {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        #lista-carrito .item-carrito button {
+            background: #be1921;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        #panel-carrito .cerrar {
+            margin-top: 10px;
+            background: #3b7d40;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>
+            EcoMarket
+            <img src="imagenes/LOGO.png" alt="Logo EcoMarket">
+        </h1>
+        <nav>
+            <a href="index.html" class="nav-link">Inicio</a> |
+            <a href="productos.html" class="nav-link">Productos</a> |
+            <a href="compra.html" class="nav-link">Compra</a>
+        </nav>
+    </header>
+
+    <h2>Nuestros Productos</h2>
+    <p style="text-align:center;">Aquí se mostrarán los productos.</p>
+
+    <div id="carrito-flotante" onclick="abrirCarrito()">🛒</div>
+    <div id="panel-carrito">
+        <h3>Tu Carrito</h3>
+        <div id="lista-carrito"></div>
+        <button class="cerrar" onclick="cerrarCarrito()">Cerrar</button>
+    </div>
+
+    <section class="productos">
+    
+        <div class="producto">
+            <img src="imagenes/miel.jpg" alt="Miel Orgánica">
+            <h3>Miel Orgánica</h3>
+            <p>Miel 100% natural, recolectada de colmenas sostenibles.</p>
+            <div style="margin-top:10px;">
+                <label for="tipo-miel">Tipo de miel:</label>
+                <select id="tipo-miel" onchange="checkOtros(this)">
+                    <option value="Miel de flores">Miel de flores</option>
+                    <option value="Miel de bosque">Miel de bosque</option>
+                    <option value="Miel multifloral">Miel multifloral</option>
+                </select>
+            </div>
+            <div style="margin-top:10px;">
+                <label for="cantidad-miel">Cantidad (kg):</label>
+                <select id="cantidad-miel" onchange="checkOtros(this)">
+                    <option value="0.25">0.25 kg</option>
+                    <option value="0.5">0.5 kg</option>
+                    <option value="1">1 kg</option>
+                    <option value="2">2 kg</option>
+                    <option value="Otros">Otros</option>
+                </select>
+                <input type="text" id="otros-cantidad-miel" placeholder="Escriba la cantidad en kg" style="display:none;">
+            </div>
+            <button onclick="comprar('miel')">Comprar</button>
+            <span class="mensaje-carrito"></span>
+        </div>
+
+        <div class="producto">
+            <img src="imagenes/verduras.jpg" alt="Verduras Frescas">
+            <h3>Verduras Frescas</h3>
+            <p>Verduras orgánicas recién cosechadas, libres de pesticidas.</p>
+            <div style="margin-top:10px;">
+                <label for="tipo-verdura">Tipo de verdura:</label>
+                <select id="tipo-verdura" onchange="checkOtros(this)">
+                    <option value="Lechuga">Lechuga</option>
+                    <option value="Zanahoria">Zanahoria</option>
+                    <option value="Tomate">Tomate</option>
+                    <option value="Otros">Otros</option>
+                </select>
+                <input type="text" id="otros-verdura" placeholder="Escriba su verdura" style="display:none;">
+            </div>
+            <div style="margin-top:10px;">
+                <label for="cantidad-verduras">Cantidad (kg):</label>
+                <select id="cantidad-verduras" onchange="checkOtros(this)">
+                    <option value="0.5">0.5 kg</option>
+                    <option value="1">1 kg</option>
+                    <option value="2">2 kg</option>
+                    <option value="5">5 kg</option>
+                    <option value="Otros">Otros</option>
+                </select>
+                <input type="text" id="otros-cantidad-verduras" placeholder="Escriba la cantidad en kg" style="display:none;">
+            </div>
+            <button onclick="comprar('verdura')">Comprar</button>
+            <span class="mensaje-carrito"></span>
+        </div>
+
+        <div class="producto">
+            <img src="imagenes/Frutas (1).webp" alt="Frutas de Temporada">
+            <h3>Frutas de Temporada</h3>
+            <p>Frutas frescas seleccionadas por su sabor y calidad.</p>
+            <div style="margin-top:10px;">
+                <label for="tipo-fruta">Tipo de fruta:</label>
+                <select id="tipo-fruta" onchange="checkOtros(this)">
+                    <option value="Manzana">Manzana</option>
+                    <option value="Plátano">Plátano</option>
+                    <option value="Naranja">Naranja</option>
+                    <option value="Otros">Otros</option>
+                </select>
+                <input type="text" id="otros-fruta" placeholder="Escriba su fruta" style="display:none;">
+            </div>
+            <div style="margin-top:10px;">
+                <label for="cantidad-frutas">Cantidad (kg):</label>
+                <select id="cantidad-frutas" onchange="checkOtros(this)">
+                    <option value="0.5">0.5 kg</option>
+                    <option value="1">1 kg</option>
+                    <option value="2">2 kg</option>
+                    <option value="5">5 kg</option>
+                    <option value="Otros">Otros</option>
+                </select>
+                <input type="text" id="otros-cantidad-frutas" placeholder="Escriba la cantidad en kg" style="display:none;">
+            </div>
+            <button onclick="comprar('fruta')">Comprar</button>
+            <span class="mensaje-carrito"></span>
+        </div>
+    </section>
+
+    <section class="por-que">
+        <h2>¿Por qué deberían elegirnos?</h2>
+        <p>
+            En EcoMarket creemos en la importancia de ofrecer productos naturales, frescos y ecológicos.
+            Trabajamos directamente con productores responsables para garantizar calidad, sabor y sostenibilidad.
+            Nos enfocamos en tu bienestar, el medio ambiente y un estilo de vida saludable.
+        </p>
+    </section>
+
+    <section style="padding: 20px 40px 50px 40px;">
+        <h2 style="text-align:center; color:#204d22;">Comentarios de Nuestros Clientes</h2>
+        <div style="max-width:1100px; margin:auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:20px; margin-top:30px;">
+            <div class="comentario" style="background:#aa38b4;">
+                <img src="imagenes/1.jpg" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>María:</strong> Los productos siempre llegan frescos y en excelente estado.</p>
+            </div>
+            <div class="comentario" style="background:#be1921;">
+                <img src="imagenes/4.jpg" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>Carlos:</strong> Me encanta la calidad ecológica que manejan.</p>
+            </div>
+            <div class="comentario" style="background:#f1e861;">
+                <img src="imagenes/2.jpg" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>Lucía:</strong> Excelente atención y productos siempre naturales.</p>
+            </div>
+            <div class="comentario" style="background:#391a8f;">
+                <img src="imagenes/5.jpg" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>Pedro:</strong> La miel es la mejor que he probado, muy artesanal.</p>
+            </div>
+            <div class="comentario" style="background:#c47317;">
+                <img src="imagenes/3.avif" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>Andrea:</strong> Las verduras siempre llegan como recién cosechadas.</p>
+            </div>
+            <div class="comentario" style="background:#204172;">
+                <img src="imagenes/6.jpg" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>Héctor:</strong> Compré frutas y llegaron perfectas y muy dulces.</p>
+            </div>
+            <div class="comentario" style="background:#8f117a;">
+                <img src="imagenes/8.webp" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>Camila:</strong> Se nota el compromiso ecológico en cada producto.</p>
+            </div>
+            <div class="comentario" style="background:#09e01b;">
+                <img src="imagenes/7.jpg" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>Diego:</strong> EcoMarket nunca falla, siempre confiable.</p>
+            </div>
+            <div class="comentario" style="background:#3bc8a4;">
+                <img src="imagenes/9.jpg" style="width:55px;height:55px;border-radius:50%;object-fit:cover;">
+                <p><strong>Sofía:</strong> Productos frescos, entrega rápida y atención amable, ¡muy recomendable!</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function checkOtros(select) {
+            const input = select.nextElementSibling;
+            if (select.value === "Otros") input.style.display = "block";
+            else input.style.display = "none";
+        }
+
+        function comprar(tipo) {
+            let producto = "", cantidad = "";
+
+            if (tipo === "miel") {
+                const selProd = document.getElementById("tipo-miel");
+                producto = selProd.value;
+                const cantSelect = document.getElementById("cantidad-miel");
+                cantidad = cantSelect.value === "Otros" ? document.getElementById("otros-cantidad-miel").value.trim() : cantSelect.value;
+            } else if (tipo === "verdura") {
+                const selProd = document.getElementById("tipo-verdura");
+                producto = selProd.value === "Otros" ? document.getElementById("otros-verdura").value.trim() : selProd.value;
+                const cantSelect = document.getElementById("cantidad-verduras");
+                cantidad = cantSelect.value === "Otros" ? document.getElementById("otros-cantidad-verduras").value.trim() : cantSelect.value;
+            } else if (tipo === "fruta") {
+                const selProd = document.getElementById("tipo-fruta");
+                producto = selProd.value === "Otros" ? document.getElementById("otros-fruta").value.trim() : selProd.value;
+                const cantSelect = document.getElementById("cantidad-frutas");
+                cantidad = cantSelect.value === "Otros" ? document.getElementById("otros-cantidad-frutas").value.trim() : cantSelect.value;
+            }
+
+            if (!producto || !cantidad) {
+                alert("Por favor, selecciona un producto y una cantidad válida.");
+                return;
+            }
+
+            const lista = document.getElementById("lista-carrito");
+            const itemDiv = document.createElement("div");
+            itemDiv.className = "item-carrito";
+            itemDiv.innerHTML = `${producto} - ${cantidad} <button onclick="eliminarItem(this)">X</button>`;
+            lista.appendChild(itemDiv);
+
+            const btn = event.target;
+            const mensaje = btn.nextElementSibling;
+            mensaje.textContent = "Agregado al carrito!";
+            mensaje.classList.add("visible");
+            setTimeout(() => { mensaje.classList.remove("visible"); }, 1500);
+        }
+
+        function eliminarItem(btn) {
+            btn.parentElement.remove();
+        }
+
+        function abrirCarrito() {
+            document.getElementById("panel-carrito").style.display = "flex";
+        }
+
+        function cerrarCarrito() {
+            document.getElementById("panel-carrito").style.display = "none";
+        }
+    </script>
+</body>
+
+</html>

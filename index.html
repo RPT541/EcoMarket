@@ -1,0 +1,289 @@
+ <!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoMarket - Inicio</title>
+
+    <style>
+        :root {
+            --verde-oscuro: #204d22;
+            --verde-claro: #3b7d40;
+            --verde-suave: #85c213;
+            --fondo: #054d13;
+            --sombra: 0 10px 25px rgba(0, 0, 0, 0.18);
+            --transicion: 0.4s ease;
+        }
+
+        body {
+            margin: 0;
+            background: var(--fondo);
+            font-family: 'Poppins', sans-serif;
+            color: var(--verde-oscuro);
+            overflow-x: hidden;
+        }
+
+        .fade {
+            animation: fadeIn 1s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 40px;
+            background: var(--verde-suave);
+            border-bottom: 2px solid #cae7d0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+            animation: slideDownHeader .7s ease;
+        }
+
+        @keyframes slideDownHeader {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        nav { display: flex; gap: 20px; }
+
+        nav a {
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--verde-oscuro);
+            position: relative;
+            transition: var(--transicion);
+        }
+
+        nav a:hover {
+            color: var(--verde-claro);
+        }
+
+        nav a::after {
+            content: "";
+            width: 0;
+            height: 3px;
+            background: var(--verde-claro);
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            transition: var(--transicion);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: var(--verde-oscuro);
+            transition: var(--transicion);
+        }
+
+        .hamburger:hover span {
+            background: var(--verde-claro);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--verde-suave);
+            width: 100%;
+            padding: 15px 0;
+            border-bottom: 2px solid #cae7d0;
+            animation: elasticDown .4s ease-out;
+        }
+
+        @keyframes elasticDown {
+            0% { transform: scaleY(0); }
+            70% { transform: scaleY(1.05); }
+            100% { transform: scaleY(1); }
+        }
+
+        .mobile-menu a {
+            padding: 12px 0;
+            text-align: center;
+            font-weight: 600;
+            color: var(--verde-oscuro);
+            transition: var(--transicion);
+        }
+
+        .mobile-menu a:hover {
+            background: #d4f5da;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            animation: fadeInHero 1.3s ease;
+        }
+
+        @keyframes fadeInHero {
+            from { filter: brightness(0.5) blur(4px); opacity: 0; }
+            to { filter: brightness(1) blur(0); opacity: 1; }
+        }
+
+        .hero:hover {
+            background-position: center 40%;
+        }
+        .about {
+            display: flex;
+            padding: 60px 40px;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .about img {
+            width: 330px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: var(--sombra);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: floatIn 1s forwards .5s;
+        }
+
+        @keyframes floatIn {
+            to {
+                transform: translateY(0) scale(1.02);
+                opacity: 1;
+            }
+        }
+
+        .about img:hover {
+            transform: scale(1.08);
+        }
+
+        .about div {
+            max-width: 650px;
+            background: #ffffffcf;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+            transform: translateX(30px);
+            opacity: 0;
+            animation: slideIn 1s forwards .7s;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        footer {
+            background: var(--verde-oscuro);
+            color: #bde6c5;
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+            font-size: 15px;
+            animation: fadeIn .8s ease;
+        }
+
+        @media (max-width: 900px) {
+            .about {
+                flex-direction: column;
+                text-align: center;
+            }
+            .about img {
+                width: 80%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .hamburger { display: flex; }
+        }
+    </style>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("mobileMenu");
+            menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+        }
+    </script>
+
+</head>
+
+<body>
+
+<header class="fade">
+    <div class="logo-area">
+        <h1>EcoMarket</h1>
+        <img src="imagenes/LOGO.png" alt="Logo" width="120">
+    </div>
+
+    <nav>
+        <a href="index.html">Inicio</a>
+        <a href="productos.html">Productos</a>
+        <a href="compra.html">Compra</a>
+    </nav>
+
+    <div class="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Inicio</a>
+    <a href="productos.html">Productos</a>
+    <a href="compra.html">Compra</a>
+</div>
+
+<section class="hero" style="
+    background: linear-gradient(rgba(0,60,0,0.45), rgba(0,60,0,0.45)),
+                url('imagenes/kiwi.jpg') center/cover fixed;
+    padding: 140px 20px;
+    text-align: center;
+    color: #ffffff;
+">
+    <h2 style="font-size: 45px; margin: 0;">Bienvenido a EcoMarket</h2>
+    <p style="font-size: 20px;">Tu tienda ecológica de confianza.</p>
+</section>
+
+<section class="about">
+    <img src="imagenes/personal.jpg" alt="Nosotros">
+
+    <div>
+        <h2>Sobre Nosotros</h2>
+        <p>Somos EcoMarket, una tienda dedicada a ofrecer productos ecológicos, responsables y sostenibles.</p>
+
+        <h3>¿Quiénes Somos?</h3>
+        <p>Un equipo comprometido con el medio ambiente y la vida saludable.</p>
+
+        <h3>¿Qué Vendemos?</h3>
+        <p>Productos orgánicos, biodegradables, reutilizables y amigables con la naturaleza.</p>
+    </div>
+</section>
+
+<footer>
+    © 2025 EcoMarket — Productos ecológicos y sostenibles.
+</footer>
+
+</body>
+</html>
+
+
+
+
+
+
+
